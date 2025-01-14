@@ -3,6 +3,7 @@ import { uploadOncloudinary } from "../utils/cloudinary.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken";
 
 // global variable
 const option = {
@@ -173,4 +174,100 @@ const userLogout = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "user logout successfully"));
 });
 
-export { userRegister, userLogin, userLogout };
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  // get refresh token for user cookie
+  // decode the token and get userid
+  // find user in db
+  // check token for cookie and token for db
+  // generate the access and refresh token
+  // set new access and refresh token to user cookie
+
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  if (!incomingRefreshToken) {
+    throw new ApiError(401, "unauthorized request");
+  }
+
+  try {
+    const decodeToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+    if (!decodeToken) {
+      throw new ApiError(401, "Invalid refresh token");
+    }
+
+    const user = await User.findById(decodeToken?._id);
+
+    if (!user) {
+      throw new ApiError(401, "Invalid refresh token");
+    }
+
+    if (incomingRefreshToken !== user?.refreshToken) {
+      throw new ApiError(401, "refreshToken is expired or used");
+    }
+
+    const { accessToken, newRefreshToken } =
+      await generateAccessAndRefreshToken(user._id);
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", newRefreshToken, option)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken: newRefreshToken },
+          "new refresh generate successfully"
+        )
+      );
+  } catch (error) {}
+});
+
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+  // get old and new and confirm password for user
+  // validate the password
+  // check new and confirm password are same or not
+  // check old password enter by user and old password by db both are same or not
+  // save new password on db
+
+  const { oldPassword, newPassword, confirmPasswrod } = req.body;
+
+  if (
+    [oldPassword, newPassword, confirmPasswrod].some((field) => field === "")
+  ) {
+    throw new ApiError(403, "all field are required");
+  }
+  if (newPassword !== confirmPasswrod) {
+    throw new ApiError(403, "password and confirmPasswrod should same");
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(401, "unauthorized, request");
+  }
+
+  const isPasswordValidate = await user.isPasswordCorrect(oldPassword);
+
+  if (!isPasswordValidate) {
+    throw new ApiError(403, "old password incorrect");
+  }
+
+  user.password = newPassword;
+
+  await user.save({ validateBeforeSave: false });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "password has been changed"));
+});
+
+export {
+  userRegister,
+  userLogin,
+  userLogout,
+  refreshAccessToken,
+  changeCurrentPassword,
+};
