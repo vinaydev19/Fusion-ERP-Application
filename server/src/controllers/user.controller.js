@@ -46,9 +46,11 @@ const userRegister = asyncHandler(async (req, res) => {
   const { fullName, username, email, phoneNo, companyName, password } =
     req.body;
 
+  console.table([fullName, username, email, phoneNo, companyName, password]);
+
   if (
     [fullName, username, email, phoneNo, companyName, password].some(
-      (field) => field === ""
+      (field) => !field || field.trim() === ""
     )
   ) {
     throw new ApiError(403, "all field are required");
@@ -60,15 +62,15 @@ const userRegister = asyncHandler(async (req, res) => {
     throw new ApiError(403, "user is already exist on this user name");
   }
 
-  const profilePic = req.file?.path;
+  const profilePicLocalPath = req.file?.path;
 
   console.log(req.files);
 
-  if (!profilePic) {
+  if (!profilePicLocalPath) {
     throw new ApiError(400, "please upload profile pic");
   }
 
-  const cloudinaryProfilePic = await uploadOncloudinary(profilePic);
+  const cloudinaryProfilePic = await uploadOncloudinary(profilePicLocalPath);
 
   if (!cloudinaryProfilePic) {
     throw new ApiError(400, "something want wrong while upload profile pic");
@@ -127,9 +129,9 @@ const userLogin = asyncHandler(async (req, res) => {
     );
   }
 
-  const isPasswordValidate = user.isPasswordCorrect(password);
+  const isPasswordValid = await user.isPasswordCorrect(password);
 
-  if (!isPasswordValidate) {
+  if (!isPasswordValid) {
     throw new ApiError(400, "password is incorrect");
   }
 
@@ -264,10 +266,87 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "password has been changed"));
 });
 
+const updateAccountDetails = asyncHandler(async (req, res) => {
+  const { fullName, username, email, phoneNo, companyName } = req.body;
+
+  if (
+    [fullName, username, email, phoneNo, companyName].every(
+      (field) => field === undefined || field === null || field.trim() === ""
+    )
+  ) {
+    throw new ApiError(403, "At least one field is required to update");
+  }
+
+  console.table([fullName, username, email, phoneNo, companyName])
+
+  const updateData = {};
+
+  if (fullName) updateData.fullName = fullName;
+  if (username) updateData.username = username;
+  if (email) updateData.email = email;
+  if (phoneNo) updateData.phoneNo = phoneNo;
+  if (companyName) updateData.companyName = companyName;
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: updateData,
+    },
+    {
+      new: true,
+    }
+  ).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, { user }, "account details are updated successfully")
+    );
+});
+
+const profilePicUpdate = asyncHandler(async (req, res) => {
+  const profilePicLocalPath = req.file?.path;
+
+  if (!profilePicLocalPath) {
+    throw new ApiError(403, "profile Pic is required");
+  }
+
+  const cloudinaryProfilePic = await uploadOncloudinary(profilePicLocalPath);
+
+  if (!cloudinaryProfilePic) {
+    throw new ApiError(403, "something want wrong while upload profile Pic");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        profilePic: cloudinaryProfilePic.url,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password -refreshToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "profile Pic is update successfully"));
+});
+
+const getCurrectUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "User fetched successfully"));
+});
+
 export {
   userRegister,
   userLogin,
   userLogout,
   refreshAccessToken,
   changeCurrentPassword,
+  updateAccountDetails,
+  profilePicUpdate,
+  getCurrectUser,
 };
