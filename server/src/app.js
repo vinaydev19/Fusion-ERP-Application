@@ -17,8 +17,14 @@ app.use(express.static("public"));
 app.use(cookieParser());
 
 // import routes here
-import userRouter from './routes/user.routes.js'
+import userRouter from "./routes/user.routes.js";
+import productInventoryRouter from "./routes/inventory.routes.js";
+import salesRouter from "./routes/sale.routes.js";
+import financialTransactionRouter from "./routes/financial.routes.js";
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/inventory", productInventoryRouter);
+app.use("/api/v1/sales", salesRouter);
+app.use("/api/v1/financialtransaction", financialTransactionRouter);
 
 export default app;
