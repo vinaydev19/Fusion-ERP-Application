@@ -30,6 +30,10 @@ const saleScheme = new mongoose.Schema(
       type: String,
       enum: ["Completed", "Pending", "Cancelled"],
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

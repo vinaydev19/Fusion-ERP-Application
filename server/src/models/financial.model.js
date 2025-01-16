@@ -24,6 +24,10 @@ const financialScheme = new Schema(
       type: String,
       enum: ["Cash", "Bank Transfer"],
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
