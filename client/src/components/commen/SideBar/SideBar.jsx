@@ -38,23 +38,38 @@ function SideBar() {
             <GiMoneyStack size={"24px"} className="text-black" />
             <button>Financial Management</button>
           </Link>
-          <Link className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl">
+          <Link
+            to="invoice-generator"
+            className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl"
+          >
             <FaFileInvoice size={"24px"} className="text-black" />
             <button>Invoice Generator</button>
           </Link>
-          <Link className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl">
+          <Link
+            to="employee-management"
+            className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl"
+          >
             <IoMdPeople size={"24px"} className="text-black" />
             <button>Employee Management</button>
           </Link>
-          <Link className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl">
+          <Link
+            to="project-management"
+            className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl"
+          >
             <GoProjectSymlink size={"24px"} className="text-black" />
             <button>Project Management</button>
           </Link>
-          <Link className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl">
+          <Link
+            to="delivery"
+            className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl"
+          >
             <CiDeliveryTruck size={"24px"} className="text-black" />
             <button>Product Delivery</button>
           </Link>
-          <Link className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl">
+          <Link
+            to="reporting-analytice"
+            className="flex text-lg gap-2 items-center hover:bg-gray-300 p-3 rounded-xl"
+          >
             <TbBrandGoogleAnalytics size={"24px"} className="text-black" />
             <button>Reporting & Analytics</button>
           </Link>

@@ -83,7 +83,7 @@ const userRegister = asyncHandler(async (req, res) => {
     phoneNo,
     companyName,
     password,
-    profilePic: cloudinaryProfilePic.url,
+    profilePic: cloudinaryProfilePic.url
   });
 
   const loggedUser = await User.findById(user._id).select(
@@ -277,7 +277,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     throw new ApiError(403, "At least one field is required to update");
   }
 
-  console.table([fullName, username, email, phoneNo, companyName])
+  console.table([fullName, username, email, phoneNo, companyName]);
 
   const updateData = {};
 

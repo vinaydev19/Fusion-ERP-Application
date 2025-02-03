@@ -1,8 +1,63 @@
-import React from "react";
+import Loading from "@/components/commen/Loading";
+import { USER_API_END_POINT } from "@/utils/constant";
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNo, setPhoneNo] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const formSubmitHandler = async (e) => {
+    e.preventDefault();
+    console.table([fullName, username, email, phoneNo, companyName, password]);
+
+    try {
+      const res = await axios.post(
+        `${USER_API_END_POINT}/register`,
+        {
+          fullName,
+          username,
+          email,
+          phoneNo,
+          companyName,
+          password,
+          profilePic,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+      if (res.data.success) {
+        navigate("/login");
+        setIsLoading(true);
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.message);
+        console.log(error.response);
+        setIsLoading(false);
+      } else {
+        toast.error("Something went wrong! Please try again.");
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div className="flex w-full ">
       <div className="w-2/4 bg-[#f0eefe] hidden md:flex md:justify-center md:flex-col md:items-center">
@@ -11,7 +66,10 @@ function Register() {
       <div className="flex flex-col mt-5 justify-center w-full md:w-2/4 items-center gap-2">
         <h1 className="font-bold text-3xl">Create yourr account</h1>
         <p className="text-[#9e9c9c]">Enter yourr details to get started</p>
-        <form className="flex flex-col gap-5 w-[70%]">
+        <form
+          onSubmit={formSubmitHandler}
+          className="flex flex-col gap-5 w-[70%]"
+        >
           <div className="flex flex-col gap-2">
             <label htmlFor="fullName">Full Name</label>
             <input
@@ -21,6 +79,8 @@ function Register() {
               required
               id="fullName"
               name="fullName"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
@@ -32,6 +92,8 @@ function Register() {
               className="outline-none rounded-xl px-3 py-2 road border-2"
               id="Username"
               name="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
@@ -43,17 +105,21 @@ function Register() {
               className="outline-none rounded-xl px-3 py-2 road border-2"
               id="Email"
               name="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="PhoneNumber">Phone Number</label>
+            <label htmlFor="phoneNo">Phone Number</label>
             <input
               type="text"
               className="outline-none rounded-xl px-3 py-2 road border-2"
               placeholder="Enter your Phone Number"
               required
-              id="PhoneNumber"
-              name="PhoneNumber"
+              id="phoneNo"
+              name="phoneNo"
+              value={phoneNo}
+              onChange={(e) => setPhoneNo(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
@@ -65,47 +131,49 @@ function Register() {
               required
               id="CompanyName"
               name="CompanyName"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="password">Password</label>
             <input
-              type="text"
+              type="password"
               className="outline-none rounded-xl px-3 py-2 road border-2"
               placeholder="Enter your Password"
               required
               id="password"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="confirmpassword">Confirm Password</label>
-            <input
-              type="text"
-              className="outline-none rounded-xl px-3 py-2 road border-2"
-              placeholder="Enter your Confirm Password"
-              required
-              id="confirmpassword"
-              name="confirmpassword"
-            ></input>
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="ProfilePicture">Profile Picture</label>
+            <label htmlFor="profilePic">Profile Picture</label>
             <input
               type="file"
               className="outline-none rounded-xl px-3 py-2 road border-2"
               required
-              id="ProfilePicture"
-              name="ProfilePicture"
+              id="profilePic"
+              name="profilePic"
+              onChange={(e) => setProfilePic(e.target.files[0])}
             ></input>
           </div>
-          <button className="flex justify-center items-center gap-2 bg-blue-700 p-3 text-white rounded-xl">
-            Create Account <FaArrowRight />
-          </button>
+          {isLoading ? (
+            <button className="flex justify-center items-center gap-2 bg-blue-700 p-3 text-white rounded-xl">
+              <Loading color="#000" />
+            </button>
+          ) : (
+            <button className="flex justify-center items-center gap-2 bg-blue-700 p-3 text-white rounded-xl">
+              Create Account <FaArrowRight />
+            </button>
+          )}
         </form>
         <div className="flex gap-1 pb-5">
           <p>Already have an account?</p>
-          <Link className="text-blue-700 hover:underline">Sign in</Link>
+          <Link to="login" className="text-blue-700 hover:underline">
+            Sign in
+          </Link>
         </div>
       </div>
     </div>

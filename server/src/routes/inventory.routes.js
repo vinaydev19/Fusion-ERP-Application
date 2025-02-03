@@ -4,6 +4,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 import {
   createProduct,
+  deleteProduct,
   getAllProducts,
   getOneProduct,
   updateProduct,

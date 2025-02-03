@@ -31,7 +31,7 @@ const saleScheme = new mongoose.Schema(
       enum: ["Completed", "Pending", "Cancelled"],
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   },

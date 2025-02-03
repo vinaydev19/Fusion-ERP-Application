@@ -1,5 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import SideBar from "./commen/SideBar/SideBar";
+import NavBar from "./commen/NavBar/NavBar";
 
 function Home() {
   return (
@@ -9,7 +11,14 @@ function Home() {
           <SideBar />
         </div>
         <div className="w-4/5">
-          <Outlet />
+          <div className="w-full h-screen">
+            <div className="h-[10%]">
+              <NavBar />
+            </div>
+            <div>
+              <Outlet />
+            </div>
+          </div>
         </div>
       </div>
     </>

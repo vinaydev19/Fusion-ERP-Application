@@ -29,7 +29,7 @@ function Login() {
             name="password"
           ></input>
         </div>
-        <Link>
+        <Link to="findaccount">
           <p className="text-blue-700 hover:underline text-right">
             Forgot password?
           </p>
@@ -40,7 +40,9 @@ function Login() {
       </form>
       <div className="flex gap-1 pb-5">
         <p>Don't have an account?</p>
-        <Link className="text-blue-700 hover:underline">Sign up</Link>
+        <Link to="register" className="text-blue-700 hover:underline">
+          Sign up
+        </Link>
       </div>
     </div>
   );

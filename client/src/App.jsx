@@ -1,27 +1,19 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import { RouterProvider } from "react-router";
-import { Home } from "lucide-react";
 import Inventory from "./components/Dashboard/Inventory";
 import Sales from "./components/Dashboard/Sales";
 import Financial from "./components/Dashboard/Financial";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-    children: [
-      { path: "inventory", element: <Inventory /> },
-      { path: "sales", element: <Sales /> },
-      { path: "financial", element: <Financial /> },
-    ],
-  },
-]);
+import Home from "./components/Home";
+import Body from "./components/Body";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <>
-      <RouterProvider router={router} />
+      <div>
+        <Body />
+        <Toaster />
+      </div>
     </>
   );
 }

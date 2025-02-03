@@ -23,7 +23,9 @@ function FindAccount() {
       </form>
       <div className="flex gap-1 pb-5">
         <p>Already have an account?</p>
-        <Link className="text-blue-700 hover:underline">Sign in</Link>
+        <Link to="login" className="text-blue-700 hover:underline">
+          Sign in
+        </Link>
       </div>
     </div>
   );
