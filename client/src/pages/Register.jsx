@@ -49,7 +49,7 @@ function Register() {
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.message);
-        console.log(error.response);
+        console.log(error.response.data);
         setIsLoading(false);
       } else {
         toast.error("Something went wrong! Please try again.");
