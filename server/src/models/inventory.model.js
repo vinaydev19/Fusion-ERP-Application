@@ -1,23 +1,23 @@
 import mongoose, { Schema } from "mongoose";
 
-const supplierSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  contact: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  address: {
-    type: String,
-    required: true,
-  },
-});
+// const supplierSchema = new Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   contact: {
+//     type: String,
+//     required: true,
+//   },
+//   email: {
+//     type: String,
+//     required: true,
+//   },
+//   address: {
+//     type: String,
+//     required: true,
+//   },
+// });
 
 const productInventorySchema = new Schema(
   {
@@ -58,7 +58,8 @@ const productInventorySchema = new Schema(
       type: Date,
     },
     supplier: {
-      type: [supplierSchema],
+      type: String,
+      required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,

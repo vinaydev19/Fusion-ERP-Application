@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../commen/NavBar/NavBar";
+import { useSelector } from "react-redux";
+import useMyProfile from "@/hooks/useMyProfile";
 
 function Profile() {
-  const [profile, setProfile] = useState({
-    fullName: "John Doe",
-    username: "johndoe",
-    email: "john@example.com",
-    phoneNumber: "+1234567890",
-    companyName: "Acme Inc.",
-  });
+  // const [profile, setProfile] = useState({
+  //   fullName: "John Doe",
+  //   username: "johndoe",
+  //   email: "john@example.com",
+  //   phoneNumber: "+1234567890",
+  //   companyName: "Acme Inc.",
+  // });
+
+  useMyProfile();
+
+  const profile = useSelector((state) => state.user);
+  console.log("Updated Profile Data in Component:", profile);
+
   return (
     <>
       <div className="w-full h-screen">
@@ -20,7 +28,7 @@ function Profile() {
                 <div className="flex justify-center items-center w-full shrink-0">
                   <img
                     className="h-16 w-16 object-cover rounded-full"
-                    src="../../../image/avatar.jpeg"
+                    src={profile?.profilePic}
                     alt="Profile"
                   />
                 </div>
@@ -38,7 +46,7 @@ function Profile() {
                     id="fullName"
                     name="fullName"
                     readOnly
-                    value={profile.fullName}
+                    value={profile?.fullName}
                     className="mt-1 outline-none block w-full rounded-md"
                   />
                 </div>
@@ -53,7 +61,7 @@ function Profile() {
                     type="text"
                     id="username"
                     name="username"
-                    value={profile.username}
+                    value={profile?.username}
                     readOnly
                     className="mt-1 outline-none block w-full rounded-md"
                   />
@@ -69,7 +77,7 @@ function Profile() {
                     type="email"
                     id="email"
                     name="email"
-                    value={profile.email}
+                    value={profile?.email}
                     readOnly
                     className="mt-1 outline-none block w-full rounded-md"
                   />
@@ -85,7 +93,7 @@ function Profile() {
                     type="tel"
                     id="phoneNumber"
                     name="phoneNumber"
-                    value={profile.phoneNumber}
+                    value={profile?.phoneNo}
                     readOnly
                     className="mt-1 outline-none block w-full rounded-md"
                   />
@@ -101,7 +109,7 @@ function Profile() {
                     type="text"
                     id="companyName"
                     name="companyName"
-                    value={profile.companyName}
+                    value={profile?.companyName}
                     readOnly
                     className="mt-1 outline-none block w-full rounded-md"
                   />

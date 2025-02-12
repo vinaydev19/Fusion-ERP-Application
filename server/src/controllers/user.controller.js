@@ -56,10 +56,15 @@ const userRegister = asyncHandler(async (req, res) => {
     throw new ApiError(403, "all field are required");
   }
 
-  const foundExistUser = await User.findOne({ $or: [{ email }, { username }] });
+  const foundExistUser = await User.findOne({ email });
 
   if (foundExistUser) {
-    throw new ApiError(403, "user is already exist on this user name");
+    throw new ApiError(403, "user is already exist on this email id");
+    // return res.status(401).json({
+    //   message: "User already exist.",
+    //   success: false,
+    // });
+    // return res.status(401).json(new ApiError(401, null,"user already exist"));
   }
 
   const profilePicLocalPath = req.file?.path;
@@ -83,7 +88,7 @@ const userRegister = asyncHandler(async (req, res) => {
     phoneNo,
     companyName,
     password,
-    profilePic: cloudinaryProfilePic.url
+    profilePic: cloudinaryProfilePic.url,
   });
 
   const loggedUser = await User.findById(user._id).select(
@@ -334,7 +339,7 @@ const profilePicUpdate = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { user }, "profile Pic is update successfully"));
 });
 
-const getCurrectUser = asyncHandler(async (req, res) => {
+const getCurrentUser = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, req.user, "User fetched successfully"));
@@ -348,5 +353,5 @@ export {
   changeCurrentPassword,
   updateAccountDetails,
   profilePicUpdate,
-  getCurrectUser,
+  getCurrentUser,
 };

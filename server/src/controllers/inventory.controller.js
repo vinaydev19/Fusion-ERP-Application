@@ -5,6 +5,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ProductInventory } from "../models/Inventory.model.js";
 
 const createProduct = asyncHandler(async (req, res) => {
+
+  // console.log("Received Body:", req.body);  // Debugging
+  // console.log("Received File:", req.file); 
   const {
     productId,
     name,
@@ -15,8 +18,22 @@ const createProduct = asyncHandler(async (req, res) => {
     sellingPrice,
     warehouseLocation,
     expirationDate,
-    supplier,
+    supplier
   } = req.body;
+
+  
+
+  // console.table(
+  //   [productId,
+  //   name,
+  //   category,
+  //   description,
+  //   stockQuantity,
+  //   costPrice,
+  //   sellingPrice,
+  //   warehouseLocation,
+  //   expirationDate]
+  // );
 
   if (
     [
@@ -29,8 +46,8 @@ const createProduct = asyncHandler(async (req, res) => {
       sellingPrice,
       warehouseLocation,
       expirationDate,
-      supplier,
-    ].every((field) => field === undefined || field === null || field === "")
+      supplier
+    ].some((field) => !field || field.trim() === "")
   ) {
     throw new ApiError(403, "all field is required");
   }
@@ -71,7 +88,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getAllProducts = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const AllProducts = await ProductInventory.findOne({ userId });
+  const AllProducts = await ProductInventory.find({ userId });
 
   return res
     .status(200)

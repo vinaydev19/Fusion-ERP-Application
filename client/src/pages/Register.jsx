@@ -19,6 +19,8 @@ function Register() {
 
   const formSubmitHandler = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     console.table([fullName, username, email, phoneNo, companyName, password]);
 
     try {
@@ -43,18 +45,14 @@ function Register() {
       console.log(res);
       if (res.data.success) {
         navigate("/login");
-        setIsLoading(true);
+        setIsLoading(false);
         toast.success(res.data.message);
       }
     } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-        console.log(error.response.data);
-        setIsLoading(false);
-      } else {
-        toast.error("Something went wrong! Please try again.");
-        console.log(error);
-      }
+      toast.error(error.response.data.message);
+      console.log(`error on register page || ${error}`);
+      console.log(error);
+      setIsLoading(false);
     }
   };
 

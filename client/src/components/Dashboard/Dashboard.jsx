@@ -7,7 +7,6 @@ function Dashboard() {
     <>
       <div className="w-full h-screen">
         <div>Dashboard</div>
-        <Loading />
       </div>
     </>
   );
